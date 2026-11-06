@@ -163,6 +163,7 @@ details summary{cursor:pointer;font-weight:800;min-height:32px}
     return d;
   }
   var data=load();
+  data.items.forEach(function(i){if(i.cat==="lainnya")i.cat="bebas"});
   function save(){mem=data;try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){}}
   var $=function(id){return document.getElementById(id)};
   var rp=function(n){return "Rp"+Math.round(n).toLocaleString("id-ID")};
@@ -194,7 +195,7 @@ details summary{cursor:pointer;font-weight:800;min-height:32px}
     var by={};items.forEach(function(i){by[i.cat]=(by[i.cat]||0)+i.amt});
     var c=calc(),sp=c.pos.filter(function(x){return x.m==="belanja"});
     var tot=sp.reduce(function(s,x){return s+x.al},0);
-    var used=sp.reduce(function(s,x){return s+(by[x.k]||0)},0)+(by.lainnya||0);
+    var used=sp.reduce(function(s,x){return s+(by[x.k]||0)},0);
     var left=tot-used;
     var big=$("sisa");big.textContent=rp(Math.abs(left));big.className="big"+(left<0?" bad":"");
     var pct=tot?Math.min(100,used/tot*100):0;
@@ -210,10 +211,12 @@ details summary{cursor:pointer;font-weight:800;min-height:32px}
     var ni=$("incInfo");ni.className="note";
     if(!c.has)ni.textContent="Belum diisi, jadi angka di bawah memakai rencana penuh ("+rp(c.wajib+data.plan.filter(function(x){return x.t==="flex"}).reduce(function(s,x){return s+x.a},0))+").";
     else if(c.short>0){ni.className="note bad";ni.textContent="Gaji kurang "+rp(c.short)+" dari total pos wajib ("+rp(c.wajib)+"). Pos fleksibel ditunda bulan ini."}
-    else ni.textContent="Total pemasukan "+rp(c.inc)+". Pos wajib "+rp(c.wajib)+". Sisanya "+rp(c.inc-c.wajib)+" dibagi ke Dana Darurat, Tabungan Masa Depan, lalu Gaya Hidup."+(c.extra>0?" Ekstra "+rp(c.extra)+" belum punya pos, misalnya dari lembur.":"");
+    else ni.textContent="Total pemasukan "+rp(c.inc)+". Pos wajib "+rp(c.wajib)+". Sisanya "+rp(c.inc-c.wajib)+" dibagi ke Dana Darurat, Tabungan Masa Depan, lalu Gaya Hidup."+(c.extra>0?" Uang bebas "+rp(c.extra)+" (sisa gaji ditambah lembur).":"");
 
     var xl=$("xlist");xl.innerHTML="";
     c.exl.forEach(function(e){var li=document.createElement("li"),d=e.date.split("-");li.innerHTML='<div class="t"><b></b><span></span></div><div class="a"></div><button aria-label="Hapus">×</button>';li.querySelector("b").textContent=e.note||"Pemasukan tambahan";li.querySelector("span").textContent=(+d[2])+" "+BULAN[+d[1]-1];li.querySelector(".a").textContent=rp(e.amt);li.querySelector("button").onclick=function(){data.extra[ym]=data.extra[ym].filter(function(z){return z.id!==e.id});save();render()};xl.appendChild(li)});
+    var dep=0,wd=0;Object.keys(data.dep||{}).forEach(function(k){dep+=data.dep[k]});data.items.forEach(function(i){if(i.cat==="darurat")wd+=i.amt});
+    var sd=(data.sav0||0)+dep-wd;
     var h="",last="";
     c.pos.forEach(function(x){
       if(x.t!==last){h+='<p class="grp">'+(x.t==="wajib"?"Wajib":"Fleksibel")+"</p>";last=x.t}
@@ -221,18 +224,21 @@ details summary{cursor:pointer;font-weight:800;min-height:32px}
       if(x.m==="cek"){
         h+=x.al>0?'<label class="chk"><input type="checkbox" data-k="'+x.k+'"'+(data.paid[ym+"|"+x.k]?" checked":"")+"> "+(x.t==="flex"?"Sudah disisihkan":"Sudah dibayar")+"</label>":'<p class="empty">Ditunda bulan ini.</p>';
         var cu=by[x.k]||0;
-        if(cu>0)h+='<div class="meta"><span>Tercatat '+rp(cu)+"</span><span>dari "+rp(x.al)+"</span></div>";
+        if(x.k==="darurat")h+='<div class="meta"><span>Dipakai bulan ini '+rp(cu)+'</span><span>Saldo '+rp(sd)+'</span></div>';
+        else if(cu>0)h+='<div class="meta"><span>Tercatat '+rp(cu)+"</span><span>dari "+rp(x.al)+"</span></div>";
       }else{
         var u=by[x.k]||0,pc=x.al?Math.min(100,u/x.al*100):(u?100:0);
         h+='<div class="bar"><i class="'+(pc>=100?"bad":pc>=80?"warn":"")+'" style="width:'+pc+'%"></i></div><div class="meta"><span>Terpakai '+rp(u)+"</span><span>"+(x.al-u<0?"lebih "+rp(u-x.al):"sisa "+rp(x.al-u))+"</span></div>";
       }
       h+="</div>";
     });
-    h+='<p class="grp">Di luar anggaran</p><div class="pos"><div class="ph"><b>Lainnya</b><span>'+rp(by.lainnya||0)+'</span></div><p class="empty">Parkir dan pengeluaran lain yang tidak punya pos. Dihitung dari sisa jatah belanja harian.</p></div>';
+    var bu=by.bebas||0,fr=c.extra,pb=fr?Math.min(100,bu/fr*100):(bu?100:0);
+    h+='<p class="grp">Uang bebas</p><div class="pos"><div class="ph"><b>Uang Bebas</b><span>'+rp(fr)+'</span></div>'+(c.has?'<div class="bar"><i class="'+(pb>=100?"bad":pb>=80?"warn":"")+'" style="width:'+pb+'%"></i></div><div class="meta"><span>Terpakai '+rp(bu)+'</span><span>'+(fr-bu<0?"lebih "+rp(bu-fr):"sisa "+rp(fr-bu))+'</span></div><p class="empty">Sisa gaji setelah semua pos, ditambah uang lembur.</p>':'<p class="empty">Isi gaji lebih dulu untuk melihat uang bebas.</p>')+'</div>';
+    
     $("pos").innerHTML=h;
     var ul=$("list");ul.innerHTML="";
     if(!items.length)ul.innerHTML='<li><p class="empty">Catat pengeluaran pertama Anda di atas.</p></li>';
-    var nm={};data.plan.forEach(function(x){nm[x.k]=x.n});nm.lainnya="Lainnya";
+    var nm={};data.plan.forEach(function(x){nm[x.k]=x.n});nm.lainnya="Lainnya";nm.bebas="Uang Bebas";nm.darurat="Dana Darurat (dipakai)";
     items.forEach(function(i){
       var li=document.createElement("li"),d=i.date.split("-");
       li.innerHTML='<div class="t"><b></b><span></span></div><div class="a"></div><button aria-label="Hapus">×</button>';
@@ -243,9 +249,9 @@ details summary{cursor:pointer;font-weight:800;min-height:32px}
       ul.appendChild(li);
     });
     var cv=$("cat").value;
-    $("cat").innerHTML=data.plan.map(function(x){return '<option value="'+x.k+'">'+x.n+"</option>"}).join("")+'<option value="lainnya">Lainnya</option>';
+    $("cat").innerHTML=data.plan.map(function(x){return '<option value="'+x.k+'">'+(x.k==="darurat"?"Dana Darurat (dipakai)":x.n)+"</option>"}).join("")+'<option value="bebas">Uang Bebas</option>';
     if(cv)$("cat").value=cv;
-    $("cfg").innerHTML=data.plan.map(function(x){return '<label for="c_'+x.k+'">'+x.n+'</label><input id="c_'+x.k+'" data-k="'+x.k+'" inputmode="numeric" value="'+dot(x.a)+'">'}).join("");
+    $("cfg").innerHTML=data.plan.map(function(x){return '<label for="c_'+x.k+'">'+x.n+'</label><input id="c_'+x.k+'" data-k="'+x.k+'" inputmode="numeric" value="'+dot(x.a)+'">'}).join("")+'<label for="sav0">Saldo awal Dana Darurat, uang yang sudah ada sebelum mulai mencatat (Rp)</label><input id="sav0" inputmode="numeric" value="'+dot(data.sav0)+'">';
     $("bk").value=JSON.stringify(data);
   }
 
@@ -258,7 +264,7 @@ details summary{cursor:pointer;font-weight:800;min-height:32px}
     data.extra=data.extra||{};(data.extra[ym]=data.extra[ym]||[]).push({id:Date.now(),amt:a,note:$("xnote").value.trim(),date:$("xdate").value||todayStr()});
     save();$("xamt").value="";$("xnote").value="";render();
   };
-  $("pos").onchange=function(e){var k=e.target.getAttribute("data-k");if(k){data.paid[ym+"|"+k]=e.target.checked;save()}};
+  $("pos").onchange=function(e){var k=e.target.getAttribute("data-k");if(k){data.paid[ym+"|"+k]=e.target.checked;if(k==="darurat"){data.dep=data.dep||{};var al=calc().pos.filter(function(p){return p.k==="darurat"})[0].al;if(e.target.checked)data.dep[ym]=al;else delete data.dep[ym]}save();render()}};
   $("add").onclick=function(){
     var a=num($("amt").value),msg=$("addMsg");
     if(!a){msg.textContent="Isi jumlah pengeluaran dulu.";$("amt").focus();return}
@@ -270,7 +276,7 @@ details summary{cursor:pointer;font-weight:800;min-height:32px}
     render();$("amt").focus();
   };
   $("saveCfg").onclick=function(){
-    data.plan.forEach(function(x){x.a=num($("c_"+x.k).value)});
+    data.plan.forEach(function(x){x.a=num($("c_"+x.k).value)});data.sav0=num($("sav0").value);
     save();render();
   };
   $("copy").onclick=function(){
@@ -299,7 +305,7 @@ details summary{cursor:pointer;font-weight:800;min-height:32px}
     var p=ym.split("-"),c=calc();
     var items=data.items.filter(function(i){return i.date.slice(0,7)===ym}).sort(function(a,b){return a.date>b.date?1:a.date<b.date?-1:a.id-b.id});
     var by={};items.forEach(function(i){by[i.cat]=(by[i.cat]||0)+i.amt});
-    var nm={lainnya:"Lainnya"};data.plan.forEach(function(x){nm[x.k]=x.n});
+    var nm={lainnya:"Lainnya",bebas:"Uang Bebas"};data.plan.forEach(function(x){nm[x.k]=x.n});nm.darurat="Dana Darurat (dipakai)";
     var sum=[["Bulan",BULAN[+p[1]-1]+" "+p[0]],["Gaji pokok",c.base||""],["Pemasukan tambahan",c.ext||""],["Total pemasukan",c.has?c.inc:""],[],["Pos","Jenis","Alokasi","Tercatat","Status"]];
     var ta=0,tu=0;
     c.pos.forEach(function(x){
@@ -307,10 +313,12 @@ details summary{cursor:pointer;font-weight:800;min-height:32px}
       var st=x.m==="cek"?(x.al>0?(data.paid[ym+"|"+x.k]?(x.t==="flex"?"Sudah disisihkan":"Sudah dibayar"):"Belum"):"Ditunda"):"";
       sum.push([x.n,x.t==="wajib"?"Wajib":"Fleksibel",x.al,u,st]);
     });
-    var lu=by.lainnya||0;tu+=lu;
-    sum.push(["Lainnya","Di luar anggaran",0,lu,""]);
+    var bu=by.bebas||0;ta+=c.extra;tu+=bu;
+    sum.push(["Uang Bebas","Sisa gaji + lembur",c.extra,bu,""]);
+    
+    
     sum.push(["Total","",ta,tu,""]);
-    if(c.has)sum.push([],["Ekstra (belum punya pos)","",c.extra]);
+    
     var rows=[["Tanggal","Pos","Catatan","Jumlah"]].concat(items.map(function(i){return [i.date,nm[i.cat]||i.cat,i.note||"",i.amt]}));
     return {sum:sum,rows:rows,name:"anggaran-"+ym};
   }
