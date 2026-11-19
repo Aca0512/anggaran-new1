@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Anggaran Bulanan</title>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#EEF1F6;--card:#fff;--ink:#14213D;--mute:#5E6B85;--line:#D9DFEA;--accent:#2547D0;--on-accent:#fff;--warn:#C77700;--bad:#C0392B;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -55,16 +55,109 @@ textarea{width:100%;min-height:90px;padding:10px;border:1px solid var(--line);bo
 .msg{font-size:14px;color:var(--mute);margin:8px 0 0;min-height:20px}
 details summary{cursor:pointer;font-weight:800;min-height:32px}
 @media (prefers-reduced-motion:reduce){.bar i{transition:none}}
+/* Neo-Brutalism */
+:root,:root:not([data-theme="light"]),:root[data-theme="dark"]{--bg:#FDF3D8;--card:#fff;--ink:#111;--mute:#444;--line:#111;--accent:#4D6BFF;--on-accent:#fff;--warn:#FF9F1C;--bad:#D90429;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#17171F;--card:#23232E;--ink:#fff;--mute:#cfcfdc;--line:#fff;--accent:#A5B4FF;--on-accent:#111;--warn:#FFB84D;--bad:#FF7A7A;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#17171F;--card:#23232E;--ink:#fff;--mute:#cfcfdc;--line:#fff;--accent:#A5B4FF;--on-accent:#111;--warn:#FFB84D;--bad:#FF7A7A;color-scheme:dark}
+body{font-family:"Space Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;font-weight:500}
+main{padding:20px 24px 56px 16px}
+.month b{background:var(--card);border:3px solid var(--line);padding:6px 14px;box-shadow:4px 4px 0 var(--line);text-transform:uppercase;letter-spacing:.05em;font-weight:700}
+.ic{border:3px solid var(--line);border-radius:0;background:#FFD23F;color:#111;font-weight:700;box-shadow:3px 3px 0 var(--line)}
+.ic:active,.btn:active{transform:translate(3px,3px);box-shadow:0 0 0 var(--line)}
+.hero{background:#FFD23F;color:#111;border:3px solid var(--line);box-shadow:6px 6px 0 var(--line);padding:18px;margin-top:4px}
+.hero small{color:#111;font-weight:700;text-transform:uppercase;letter-spacing:.05em;font-size:13px}
+.hero .meta{color:#111;font-weight:700}
+.hero .bar{background:#fff;border-color:#111}
+.big{font-weight:700;letter-spacing:-.03em}
+.big.bad{color:#B00020}
+.day{font-weight:700}
+.bar{height:20px;border:3px solid #111;border-radius:0;background:var(--card)}
+.bar i{border-radius:0}
+section{background:var(--card);border:3px solid var(--line);border-radius:0;box-shadow:6px 6px 0 var(--line);margin-top:24px}
+h2{display:inline-block;background:#FFD23F;color:#111;border:3px solid var(--line);padding:2px 10px;box-shadow:3px 3px 0 var(--line);text-transform:uppercase;letter-spacing:.05em;font-size:15px;font-weight:700;margin-bottom:14px}
+label{color:var(--ink);font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.04em}
+input,select,textarea{border:3px solid var(--line);border-radius:0;background:var(--card);color:var(--ink);font-weight:500}
+input:focus,select:focus,textarea:focus{box-shadow:4px 4px 0 var(--accent);outline:none}
+input[type=checkbox]{box-shadow:none}
+.btn{border:3px solid var(--line);border-radius:0;background:#B6F03C;color:#111;font-weight:700;text-transform:uppercase;letter-spacing:.04em;box-shadow:4px 4px 0 var(--line);transition:transform .08s,box-shadow .08s}
+.btn.ghost{background:var(--card);color:var(--ink);border:3px solid var(--line)}
+.pos{border-top:3px solid var(--line)}.pos:first-child{border-top:0}
+.grp{color:var(--ink);font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:12px}
+.ph em{color:#111;background:#FFD23F;padding:0 5px;border:2px solid var(--line);font-weight:700}
+.meta{color:var(--ink);font-weight:500}
+.note,.msg,.empty,li .t span{color:var(--mute)}
+.note.bad{color:var(--bad);font-weight:700}
+li{border-top:2px solid var(--line)}
+li button{color:var(--ink);font-weight:700}
+details summary{text-transform:uppercase;letter-spacing:.05em;font-weight:700}
+@media (prefers-reduced-motion:reduce){.btn,.ic{transition:none}}
+/* Neo-Brutalism v2 */
+:root,:root:not([data-theme="light"]),:root[data-theme="dark"]{--bg:#C8E64A;--card:#fff;--ink:#000;--mute:#333;--line:#000;--accent:#A97BFF;--on-accent:#000;--warn:#FFB020;--bad:#C4001F;--pink:#FF9ACB;--blue:#6FC3FF;--yellow:#FFC83D;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10140A;--card:#1E2412;--ink:#fff;--mute:#d2dbb8;--line:#D8F26B;--bad:#FF8A8A;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#10140A;--card:#1E2412;--ink:#fff;--mute:#d2dbb8;--line:#D8F26B;--bad:#FF8A8A;color-scheme:dark}
+body{background:var(--bg);color:var(--ink)}
+main{max-width:480px;padding:18px 20px 130px 16px}
+main>section{display:none}
+section[hidden]{display:none!important}
+body[data-view="akun"] section[data-v="akun"],body[data-view="bayar"] section[data-v="bayar"],body[data-view="kantong"] section[data-v="kantong"],body[data-view="riwayat"] section[data-v="riwayat"]{display:block}
+.hv{display:none}body[data-view="beranda"] .hv{display:block}
+.top{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.av{width:48px;height:48px;border:3px solid #000;border-radius:14px;background:var(--pink);box-shadow:3px 3px 0 #000;display:grid;place-items:center;font-weight:700;color:#000;flex:none}
+.top small{display:block;font-size:13px;color:var(--ink)}
+.top b{font-size:28px;line-height:1.05;font-weight:700;text-transform:uppercase}
+.month{margin-bottom:16px}
+.month b{border:3px solid var(--line);border-radius:14px;background:var(--card);box-shadow:3px 3px 0 var(--line);padding:6px 16px;text-transform:none;letter-spacing:0}
+.ic{border:3px solid #000;border-radius:14px;background:#fff;color:#000;box-shadow:3px 3px 0 #000;width:46px;height:46px}
+.hero{background:var(--accent);color:#000;border:3px solid #000;border-radius:22px;box-shadow:6px 6px 0 #000;padding:20px}
+.hero .bar{height:20px;border:3px solid #000;border-radius:12px;background:#fff}
+.hero .bar i{background:#000;border-radius:8px}
+.hero .bar i.warn{background:var(--warn)}.hero .bar i.bad{background:#C4001F}
+.hero .meta,.hero small{color:#000;font-weight:700}
+.hero .day{border-top:3px solid #000;margin-top:14px;padding-top:12px;font-weight:700}
+.big{font-size:clamp(40px,13vw,58px);font-weight:700}
+.big.bad{color:#9B0018}
+.qa{display:flex;justify-content:space-between;gap:6px;margin:22px 0 4px}
+.qa button{flex:1;background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:8px;font-weight:700;font-size:13px;color:var(--ink);cursor:pointer;min-height:44px}
+.qa i{width:64px;height:64px;border:3px solid #000;border-radius:18px;box-shadow:4px 4px 0 #000;display:grid;place-items:center;font-size:26px;font-style:normal;background:var(--c)}
+.qa button:active i{transform:translate(3px,3px);box-shadow:none}
+h2{display:block;background:none;border:0;box-shadow:none;padding:0;margin:24px 0 12px;color:var(--ink);font-size:24px;font-weight:700;text-transform:uppercase;letter-spacing:0}
+section{background:var(--card);border:3px solid var(--line);border-radius:20px;box-shadow:5px 5px 0 var(--line);margin-top:0;padding:16px}
+main>section+section{margin-top:22px}
+section h2{margin-top:0}
+section[data-v="kantong"]{background:none;border:0;box-shadow:none;padding:0}
+section[data-v="kantong"] h2{margin-top:4px}
+input,select,textarea{border:3px solid var(--line);border-radius:14px;background:var(--card);color:var(--ink)}
+input:focus,select:focus,textarea:focus{box-shadow:4px 4px 0 var(--accent)}
+label{color:var(--ink);text-transform:none;letter-spacing:0;font-size:14px;font-weight:700}
+.btn{border:3px solid #000;border-radius:16px;background:var(--pink);color:#000;box-shadow:4px 4px 0 #000;text-transform:none;letter-spacing:0;font-size:16px}
+.btn.ghost{background:var(--card);color:var(--ink);border:3px solid var(--line);box-shadow:4px 4px 0 var(--line)}
+.bar{border:3px solid var(--line);border-radius:12px;height:18px;background:#fff}
+.bar i{background:var(--accent);border-radius:8px}
+.pos{background:var(--card);border:3px solid var(--line);border-radius:18px;box-shadow:4px 4px 0 var(--line);padding:14px;margin:0 0 16px}
+.pos:first-child{border-top:3px solid var(--line);padding-top:14px}
+.ph{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.ph b{flex:1;font-size:17px;font-weight:700}
+.ph span{font-size:17px;font-weight:700}
+.ti{width:42px;height:42px;flex:none;border:3px solid #000;border-radius:12px;background:var(--yellow);display:grid;place-items:center;font-style:normal;font-size:20px}
+.grp{font-size:12px;letter-spacing:.08em;margin:6px 0 10px}
+nav{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:100%;max-width:480px;display:flex;align-items:flex-end;background:var(--card);border:3px solid var(--line);border-bottom:0;border-radius:26px 26px 0 0;padding:8px 6px calc(8px + env(safe-area-inset-bottom,0px));z-index:20}
+nav button{flex:1;background:none;border:0;display:flex;flex-direction:column;align-items:center;gap:2px;min-height:56px;font-size:12px;font-weight:700;color:var(--mute);cursor:pointer}
+nav button i{font-style:normal;font-size:22px;line-height:1}
+nav button.on,nav .mid{color:var(--ink)}
+nav .mid i{width:60px;height:60px;margin-top:-30px;background:var(--pink);border:3px solid #000;border-radius:18px;box-shadow:3px 3px 0 #000;display:grid;place-items:center;font-size:26px}
+details summary{font-size:18px;min-height:40px}
 </style>
 </head>
 <body>
 <main>
+  <div class="top"><div class="av">Rp</div><div><small id="today"></small><b>Anggaran</b></div></div>
   <div class="month">
     <button class="ic" id="prev" aria-label="Bulan sebelumnya">‹</button>
     <b id="mlabel"></b>
     <button class="ic" id="next" aria-label="Bulan berikutnya">›</button>
   </div>
 
+  <div class="hv">
   <div class="hero">
     <small>Sisa jatah belanja harian</small>
     <div class="big" id="sisa">Rp0</div>
@@ -72,8 +165,16 @@ details summary{cursor:pointer;font-weight:800;min-height:32px}
     <div class="meta"><span id="used"></span><span id="budgetTxt"></span></div>
     <p class="day" id="perDay"></p>
   </div>
+  <div class="qa">
+    <button data-go="bayar" style="--c:var(--pink)"><i>➕</i>Catat</button>
+    <button data-go="akun" style="--c:#fff"><i>💰</i>Pemasukan</button>
+    <button data-go="akun" data-to="cadangan" style="--c:var(--blue)"><i>💾</i>Cadangan</button>
+    <button data-go="riwayat" data-to="exp" style="--c:var(--yellow)"><i>📤</i>Ekspor</button>
+  </div>
+  <div id="bebas"></div>
+  </div>
 
-  <section>
+  <section data-v="akun">
     <h2>Pemasukan bulan ini</h2>
     <label for="inc">Gaji pokok (Rp)</label>
     <input id="inc" inputmode="numeric" placeholder="4.500.000" autocomplete="off">
@@ -86,7 +187,7 @@ details summary{cursor:pointer;font-weight:800;min-height:32px}
     <p class="note" id="incInfo"></p>
   </section>
 
-  <section>
+  <section data-v="bayar">
     <h2>Catat pengeluaran</h2>
     <label for="amt">Jumlah (Rp)</label>
     <input id="amt" inputmode="numeric" placeholder="25.000" autocomplete="off">
@@ -100,17 +201,17 @@ details summary{cursor:pointer;font-weight:800;min-height:32px}
     <p class="msg" id="addMsg" role="status"></p>
   </section>
 
-  <section>
-    <h2>Pos bulan ini</h2>
+  <section data-v="kantong">
+    <h2>Kantong</h2>
     <div id="pos"></div>
   </section>
 
-  <section>
+  <section data-v="riwayat">
     <h2>Riwayat bulan ini</h2>
     <ul id="list"></ul>
   </section>
 
-  <section id="exp" hidden>
+  <section id="exp" hidden data-v="riwayat">
     <h2>Ekspor bulan ini</h2>
     <p class="empty">Unduh rekap pos dan semua pengeluaran untuk bulan yang sedang ditampilkan.</p>
     <button class="btn" id="xlsx">Ekspor ke Excel (.xlsx)</button>
@@ -118,7 +219,7 @@ details summary{cursor:pointer;font-weight:800;min-height:32px}
     <p class="msg" id="expMsg" role="status"></p>
   </section>
 
-  <section>
+  <section data-v="akun">
     <details>
       <summary>Ubah angka pos</summary>
       <p class="empty" style="margin:8px 0">Pos wajib dipenuhi lebih dulu. Pos fleksibel diisi berurutan dari atas ke bawah sesuai sisa gaji.</p>
@@ -127,8 +228,8 @@ details summary{cursor:pointer;font-weight:800;min-height:32px}
     </details>
   </section>
 
-  <section>
-    <details>
+  <section id="cadangan" data-v="akun">
+    <details open>
       <summary>Cadangkan dan pulihkan data</summary>
       <p class="empty" style="margin:8px 0">Data tersimpan di browser HP ini saja. Salin teks di bawah ke catatan Anda sebagai cadangan.</p>
       <textarea id="bk" aria-label="Data cadangan"></textarea>
@@ -138,6 +239,13 @@ details summary{cursor:pointer;font-weight:800;min-height:32px}
     </details>
   </section>
 </main>
+<nav aria-label="Menu utama">
+  <button data-go="beranda" class="on"><i>🏠</i>Beranda</button>
+  <button data-go="kantong"><i>👛</i>Kantong</button>
+  <button data-go="bayar" class="mid"><i>➕</i>Catat</button>
+  <button data-go="riwayat"><i>🕘</i>Riwayat</button>
+  <button data-go="akun"><i>👤</i>Akun</button>
+</nav>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script>
@@ -166,7 +274,7 @@ details summary{cursor:pointer;font-weight:800;min-height:32px}
   data.items.forEach(function(i){if(i.cat==="lainnya")i.cat="bebas"});
   function save(){mem=data;try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){}}
   var $=function(id){return document.getElementById(id)};
-  var rp=function(n){return "Rp"+Math.round(n).toLocaleString("id-ID")};
+  var rp=function(n){n=Math.round(n);return (n<0?"-":"")+"Rp"+Math.abs(n).toLocaleString("id-ID")};
   var pad=function(n){return n<10?"0"+n:""+n};
   var num=function(s){return parseInt(String(s).replace(/\D/g,""),10)||0};
   var now=new Date();
@@ -220,11 +328,11 @@ details summary{cursor:pointer;font-weight:800;min-height:32px}
     var h="",last="";
     c.pos.forEach(function(x){
       if(x.t!==last){h+='<p class="grp">'+(x.t==="wajib"?"Wajib":"Fleksibel")+"</p>";last=x.t}
-      h+='<div class="pos"><div class="ph"><b>'+x.n+'</b><span>'+rp(x.al)+(x.al<x.a?' <em>dari '+rp(x.a)+"</em>":"")+"</span></div>";
+      h+='<div class="pos"><div class="ph"><i class="ti">'+(IC[x.k]||"•")+'</i><b>'+x.n+'</b><span>'+(x.k==="darurat"?"Sisa "+rp(x.al-(by[x.k]||0)):rp(x.al))+(x.al<x.a?' <em>dari '+rp(x.a)+"</em>":"")+"</span></div>";
       if(x.m==="cek"){
         h+=x.al>0?'<label class="chk"><input type="checkbox" data-k="'+x.k+'"'+(data.paid[ym+"|"+x.k]?" checked":"")+"> "+(x.t==="flex"?"Sudah disisihkan":"Sudah dibayar")+"</label>":'<p class="empty">Ditunda bulan ini.</p>';
         var cu=by[x.k]||0;
-        if(x.k==="darurat")h+='<div class="meta"><span>Dipakai bulan ini '+rp(cu)+'</span><span>Saldo '+rp(sd)+'</span></div>';
+        if(x.k==="darurat")h+=dbar(x,cu,sd)+'<label for="dpAmt">Pakai dana darurat (Rp)</label><input id="dpAmt" inputmode="numeric" placeholder="100.000" autocomplete="off"><input id="dpNote" placeholder="Untuk apa (opsional)" maxlength="60" autocomplete="off" style="margin-top:8px"><button class="btn" id="dpBtn" type="button">Potong dari dana darurat</button>';
         else if(cu>0)h+='<div class="meta"><span>Tercatat '+rp(cu)+"</span><span>dari "+rp(x.al)+"</span></div>";
       }else{
         var u=by[x.k]||0,pc=x.al?Math.min(100,u/x.al*100):(u?100:0);
@@ -233,7 +341,7 @@ details summary{cursor:pointer;font-weight:800;min-height:32px}
       h+="</div>";
     });
     var bu=by.bebas||0,fr=c.extra,pb=fr?Math.min(100,bu/fr*100):(bu?100:0);
-    h+='<p class="grp">Uang bebas</p><div class="pos"><div class="ph"><b>Uang Bebas</b><span>'+rp(fr)+'</span></div>'+(c.has?'<div class="bar"><i class="'+(pb>=100?"bad":pb>=80?"warn":"")+'" style="width:'+pb+'%"></i></div><div class="meta"><span>Terpakai '+rp(bu)+'</span><span>'+(fr-bu<0?"lebih "+rp(bu-fr):"sisa "+rp(fr-bu))+'</span></div><p class="empty">Sisa gaji setelah semua pos, ditambah uang lembur.</p>':'<p class="empty">Isi gaji lebih dulu untuk melihat uang bebas.</p>')+'</div>';
+    $("bebas").innerHTML='<h2>Uang bebas</h2><div class="pos"><div class="ph"><i class="ti">✨</i><b>Uang Bebas</b><span>'+rp(fr)+'</span></div>'+(c.has?'<div class="bar"><i class="'+(pb>=100?"bad":pb>=80?"warn":"")+'" style="width:'+pb+'%"></i></div><div class="meta"><span>Terpakai '+rp(bu)+'</span><span>'+(fr-bu<0?"lebih "+rp(bu-fr):"sisa "+rp(fr-bu))+'</span></div><p class="empty">Sisa gaji setelah semua pos, ditambah uang lembur.</p>':'<p class="empty">Isi gaji lebih dulu untuk melihat uang bebas.</p>')+'</div>';
     
     $("pos").innerHTML=h;
     var ul=$("list");ul.innerHTML="";
@@ -249,7 +357,7 @@ details summary{cursor:pointer;font-weight:800;min-height:32px}
       ul.appendChild(li);
     });
     var cv=$("cat").value;
-    $("cat").innerHTML=data.plan.map(function(x){return '<option value="'+x.k+'">'+(x.k==="darurat"?"Dana Darurat (dipakai)":x.n)+"</option>"}).join("")+'<option value="bebas">Uang Bebas</option>';
+    $("cat").innerHTML=data.plan.filter(function(x){return x.k!=="darurat"}).map(function(x){return '<option value="'+x.k+'">'+x.n+"</option>"}).join("")+'<option value="bebas">Uang Bebas</option>';
     if(cv)$("cat").value=cv;
     $("cfg").innerHTML=data.plan.map(function(x){return '<label for="c_'+x.k+'">'+x.n+'</label><input id="c_'+x.k+'" data-k="'+x.k+'" inputmode="numeric" value="'+dot(x.a)+'">'}).join("")+'<label for="sav0">Saldo awal Dana Darurat, uang yang sudah ada sebelum mulai mencatat (Rp)</label><input id="sav0" inputmode="numeric" value="'+dot(data.sav0)+'">';
     $("bk").value=JSON.stringify(data);
@@ -287,10 +395,22 @@ details summary{cursor:pointer;font-weight:800;min-height:32px}
   $("restore").onclick=function(){
     try{
       var d=JSON.parse($("bk").value);
-      if(!d||!Array.isArray(d.items)||!Array.isArray(d.plan)||typeof d.inc!=="object")throw 0;
+      if(!d||!Array.isArray(d.items))throw 0;
+      if(!Array.isArray(d.plan))d.plan=fresh().plan;
+      d.inc=d.inc||{};d.paid=d.paid||{};d.extra=d.extra||{};d.dep=d.dep||{};
+      var ks={bebas:1,darurat:1};d.plan.forEach(function(p){ks[p.k]=1});
+      d.items.forEach(function(i){if(i.cat==="lainnya")i.cat="bebas";if(!ks[i.cat])i.cat=MAP[i.cat]||"bebas"});
       data=d;save();render();$("bkMsg").textContent="Data dipulihkan.";
     }catch(e){$("bkMsg").textContent="Teks tidak valid. Tempel teks cadangan yang utuh."}
   };
+  var IC={adik:"🎁",ut:"🎓",icloud:"☁️",makan:"🍜",bensin:"⛽",darurat:"🛟",masa:"🏦",gaya:"🎮"};
+  function dbar(x,cu,sd){
+    var pc=x.al?Math.min(100,cu/x.al*100):(cu?100:0),left=x.al-cu;
+    return '<div class="bar"><i class="'+(pc>=100?"bad":pc>=80?"warn":"")+'" style="width:'+pc+'%"></i></div>'
+      +'<div class="meta"><span>Disisihkan '+rp(x.al)+'</span><span>Dipakai '+rp(cu)+'</span></div>'
+      +'<div class="meta"><span>Saldo total</span><span>'+rp(sd)+'</span></div>'
+      +(data.sav0?'':'<p class="note">Isi saldo awal di Akun, bagian Ubah angka pos, kalau Anda sudah punya dana darurat sebelum mulai mencatat.</p>');
+  }
   function dot(n){return n?String(n).replace(/\B(?=(\d{3})+(?!\d))/g,"."):""}
   function fmt(el){
     var v=el.value,pos=el.selectionStart,before=v.slice(0,pos).replace(/\D/g,"").length;
@@ -352,6 +472,34 @@ details summary{cursor:pointer;font-weight:800;min-height:32px}
     doSave(d.name+".csv","\uFEFF"+toCSV(d.sum)+"\r\n\r\n"+toCSV(d.rows));
   };
   if(window.claude&&claude.use){claude.use("downloads").then(function(d){if(d){DL=d;$("exp").hidden=false}}).catch(function(){})}else{$("exp").hidden=false}
+  var V=["beranda","kantong","bayar","riwayat","akun"];
+  function show(t){
+    if(V.indexOf(t)<0)t="beranda";
+    document.body.setAttribute("data-view",t);
+    var bs=document.querySelectorAll("nav button");
+    for(var i=0;i<bs.length;i++)bs[i].classList.toggle("on",bs[i].getAttribute("data-go")===t);
+    window.scrollTo(0,0);
+  }
+  function go(t){if(location.hash.slice(1)===t)show(t);else{try{location.hash=t}catch(e){show(t)}}}
+  document.addEventListener("click",function(e){
+    var t=e.target;
+    if(t.id==="dpBtn"){
+      var a=num($("dpAmt").value);if(!a){$("dpAmt").focus();return}
+      var dd=ym===curYM?todayStr():ym+"-01";
+      data.items.push({id:Date.now(),date:dd,amt:a,cat:"darurat",note:$("dpNote").value.trim()});
+      save();render();return;
+    }
+    var b=t.closest&&t.closest("[data-go]");
+    if(b){
+      go(b.getAttribute("data-go"));
+      var to=b.getAttribute("data-to");
+      if(to)setTimeout(function(){var el=$(to);if(el){var dt=el.querySelector("details");if(dt)dt.open=true;el.scrollIntoView()}},150);
+    }
+  });
+  window.addEventListener("hashchange",function(){show(location.hash.slice(1))});
+  var HR=["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"];
+  $("today").textContent=HR[now.getDay()]+", "+now.getDate()+" "+BULAN[now.getMonth()];
+  show(location.hash.slice(1));
   setDate();render();
 })();
 </script>
