@@ -146,11 +146,18 @@ nav button i{font-style:normal;font-size:22px;line-height:1}
 nav button.on,nav .mid{color:var(--ink)}
 nav .mid i{width:60px;height:60px;margin-top:-30px;background:var(--pink);border:3px solid #000;border-radius:18px;box-shadow:3px 3px 0 #000;display:grid;place-items:center;font-size:26px}
 details summary{font-size:18px;min-height:40px}
+.chip{margin-left:auto;flex:none;font-size:12px;font-weight:700;border:3px solid #000;border-radius:999px;padding:2px 10px;background:#fff;color:#000;white-space:nowrap}
+.dlg{position:fixed;inset:0;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center;padding:20px;z-index:50}
+.dlg[hidden]{display:none}
+.dlgc{background:var(--card);color:var(--ink);border:3px solid var(--line);border-radius:20px;box-shadow:6px 6px 0 var(--line);padding:20px;width:100%;max-width:380px}
+.dlgc h3{margin:0 0 8px;font-size:22px;font-weight:700;text-transform:uppercase}
+.dlgc p{margin:0 0 6px;overflow-wrap:anywhere}
+.dlgw{color:var(--mute);font-size:14px}
 </style>
 </head>
 <body>
 <main>
-  <div class="top"><div class="av">Rp</div><div><small id="today"></small><b>Anggaran</b></div></div>
+  <div class="top"><div class="av">Rp</div><div><small id="today"></small><b>Anggaran</b></div><span class="chip" id="sync"></span></div>
   <div class="month">
     <button class="ic" id="prev" aria-label="Bulan sebelumnya">‹</button>
     <b id="mlabel"></b>
@@ -239,6 +246,14 @@ details summary{font-size:18px;min-height:40px}
     </details>
   </section>
 </main>
+<div class="dlg" id="dlg" role="dialog" aria-modal="true" aria-labelledby="dlgT" hidden>
+  <div class="dlgc">
+    <h3 id="dlgT"></h3>
+    <p id="dlgD"></p>
+    <p class="dlgw">Data yang dihapus tidak bisa dikembalikan.</p>
+    <div class="row"><button class="btn ghost" id="dlgNo" type="button">Batal</button><button class="btn" id="dlgYes" type="button" style="background:#FF6B6B">Hapus</button></div>
+  </div>
+</div>
 <nav aria-label="Menu utama">
   <button data-go="beranda" class="on"><i>🏠</i>Beranda</button>
   <button data-go="kantong"><i>👛</i>Kantong</button>
@@ -272,7 +287,7 @@ details summary{font-size:18px;min-height:40px}
   }
   var data=load();
   data.items.forEach(function(i){if(i.cat==="lainnya")i.cat="bebas"});
-  function save(){mem=data;try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){}}
+  function save(){mem=data;try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){}schedule()}
   var $=function(id){return document.getElementById(id)};
   var rp=function(n){n=Math.round(n);return (n<0?"-":"")+"Rp"+Math.abs(n).toLocaleString("id-ID")};
   var pad=function(n){return n<10?"0"+n:""+n};
@@ -322,7 +337,7 @@ details summary{font-size:18px;min-height:40px}
     else ni.textContent="Total pemasukan "+rp(c.inc)+". Pos wajib "+rp(c.wajib)+". Sisanya "+rp(c.inc-c.wajib)+" dibagi ke Dana Darurat, Tabungan Masa Depan, lalu Gaya Hidup."+(c.extra>0?" Uang bebas "+rp(c.extra)+" (sisa gaji ditambah lembur).":"");
 
     var xl=$("xlist");xl.innerHTML="";
-    c.exl.forEach(function(e){var li=document.createElement("li"),d=e.date.split("-");li.innerHTML='<div class="t"><b></b><span></span></div><div class="a"></div><button aria-label="Hapus">×</button>';li.querySelector("b").textContent=e.note||"Pemasukan tambahan";li.querySelector("span").textContent=(+d[2])+" "+BULAN[+d[1]-1];li.querySelector(".a").textContent=rp(e.amt);li.querySelector("button").onclick=function(){data.extra[ym]=data.extra[ym].filter(function(z){return z.id!==e.id});save();render()};xl.appendChild(li)});
+    c.exl.forEach(function(e){var li=document.createElement("li"),d=e.date.split("-");li.innerHTML='<div class="t"><b></b><span></span></div><div class="a"></div><button aria-label="Hapus">×</button>';li.querySelector("b").textContent=e.note||"Pemasukan tambahan";li.querySelector("span").textContent=(+d[2])+" "+BULAN[+d[1]-1];li.querySelector(".a").textContent=rp(e.amt);li.querySelector("button").onclick=function(){ask("Hapus pemasukan tambahan ini?",(e.note||"Pemasukan tambahan")+" · "+rp(e.amt)+" · "+(+d[2])+" "+BULAN[+d[1]-1],function(){data.extra[ym]=data.extra[ym].filter(function(z){return z.id!==e.id});save();render()})};xl.appendChild(li)});
     var dep=0,wd=0;Object.keys(data.dep||{}).forEach(function(k){dep+=data.dep[k]});data.items.forEach(function(i){if(i.cat==="darurat")wd+=i.amt});
     var sd=(data.sav0||0)+dep-wd;
     var h="",last="";
@@ -353,7 +368,7 @@ details summary{font-size:18px;min-height:40px}
       li.querySelector("b").textContent=i.note||nm[i.cat]||i.cat;
       li.querySelector("span").textContent=(i.note?(nm[i.cat]||i.cat)+", ":"")+(+d[2])+" "+BULAN[+d[1]-1];
       li.querySelector(".a").textContent=rp(i.amt);
-      li.querySelector("button").onclick=function(){data.items=data.items.filter(function(z){return z.id!==i.id});save();render()};
+      li.querySelector("button").onclick=function(){ask("Hapus riwayat ini?",(i.note||nm[i.cat]||i.cat)+" · "+rp(i.amt)+" · "+(+d[2])+" "+BULAN[+d[1]-1],function(){data.items=data.items.filter(function(z){return z.id!==i.id});save();render()})};
       ul.appendChild(li);
     });
     var cv=$("cat").value;
@@ -410,6 +425,21 @@ details summary{font-size:18px;min-height:40px}
       +'<div class="meta"><span>Disisihkan '+rp(x.al)+'</span><span>Dipakai '+rp(cu)+'</span></div>'
       +'<div class="meta"><span>Saldo total</span><span>'+rp(sd)+'</span></div>'
       +(data.sav0?'':'<p class="note">Isi saldo awal di Akun, bagian Ubah angka pos, kalau Anda sudah punya dana darurat sebelum mulai mencatat.</p>');
+  }
+  function ask(title,detail,yes){
+    var dlg=$("dlg"),prev=document.activeElement;
+    $("dlgT").textContent=title;$("dlgD").textContent=detail;
+    dlg.hidden=false;$("dlgNo").focus();
+    function key(e){if(e.key==="Escape")close()}
+    function close(){
+      dlg.hidden=true;$("dlgYes").onclick=null;$("dlgNo").onclick=null;dlg.onclick=null;
+      document.removeEventListener("keydown",key);
+      try{if(prev&&prev.focus)prev.focus()}catch(e){}
+    }
+    document.addEventListener("keydown",key);
+    $("dlgNo").onclick=close;
+    dlg.onclick=function(e){if(e.target===dlg)close()};
+    $("dlgYes").onclick=function(){close();yes()};
   }
   function dot(n){return n?String(n).replace(/\B(?=(\d{3})+(?!\d))/g,"."):""}
   function fmt(el){
@@ -472,6 +502,70 @@ details summary{font-size:18px;min-height:40px}
     doSave(d.name+".csv","\uFEFF"+toCSV(d.sum)+"\r\n\r\n"+toCSV(d.rows));
   };
   if(window.claude&&claude.use){claude.use("downloads").then(function(d){if(d){DL=d;$("exp").hidden=false}}).catch(function(){})}else{$("exp").hidden=false}
+  /* Sinkronisasi antar perangkat lewat penyimpanan online akun */
+  var DB=null,UID=null,ready=false,synced={},stimer=null,busy=false,again=false,slow=null;
+  function setStat(t){var s=$("sync");if(s)s.textContent=t}
+  function pack(){
+    var o={},by={};
+    o.cfg=JSON.stringify({plan:data.plan,inc:data.inc,paid:data.paid,extra:data.extra||{},dep:data.dep||{},sav0:data.sav0||0});
+    data.items.forEach(function(i){var k="m"+i.date.slice(0,4)+i.date.slice(5,7);(by[k]=by[k]||[]).push(i)});
+    Object.keys(by).forEach(function(k){o[k]=JSON.stringify(by[k])});
+    Object.keys(synced).forEach(function(k){if(k!=="cfg"&&!o[k])o[k]="[]"});
+    return o;
+  }
+  function dirty(){var o=pack();return Object.keys(o).some(function(k){return synced[k]!==o[k]})}
+  function schedule(){if(!DB||!ready)return;setStat("Menyimpan…");clearTimeout(stimer);stimer=setTimeout(push,700)}
+  function push(){
+    if(busy){again=true;return}
+    busy=true;stimer=null;
+    var o=pack(),col=DB.collection("data/users/"+UID),chain=Promise.resolve();
+    Object.keys(o).forEach(function(k){
+      if(synced[k]===o[k])return;
+      chain=chain.then(function(){return col.doc(k).set({d:o[k]}).then(function(){synced[k]=o[k]})});
+    });
+    chain.then(function(){busy=false;if(again){again=false;schedule()}else setStat("Tersinkron ✓")}).catch(function(){busy=false;setStat("Gagal sinkron")});
+  }
+  function adopt(remote){
+    try{localStorage.setItem(KEY+"-prev",JSON.stringify(data))}catch(e){}
+    var cfg={},items=[];
+    try{cfg=JSON.parse(remote.cfg)}catch(e){return}
+    Object.keys(remote).forEach(function(k){if(k!=="cfg"){try{items=items.concat(JSON.parse(remote[k]))}catch(e){}}});
+    data={plan:cfg.plan||fresh().plan,inc:cfg.inc||{},paid:cfg.paid||{},extra:cfg.extra||{},dep:cfg.dep||{},sav0:cfg.sav0||0,items:items};
+    synced={};Object.keys(remote).forEach(function(k){synced[k]=remote[k]});
+    mem=data;try{localStorage.setItem(KEY,JSON.stringify(data))}catch(e){}
+    render();setStat("Tersinkron ✓");
+    if(dirty())schedule();
+  }
+  function onSnap(snap){
+    if(snap.metadata&&snap.metadata.fromCache)return;
+    var remote={};
+    snap.docs.forEach(function(d){var v=d.data();if(v&&typeof v.d==="string")remote[d.id]=v.d});
+    if(!ready){
+      ready=true;clearTimeout(slow);
+      if(!remote.cfg){
+        synced={};
+        if(JSON.stringify(data)!==JSON.stringify(fresh()))schedule();else setStat("Tersinkron ✓");
+      }else adopt(remote);
+      return;
+    }
+    var changed=Object.keys(remote).some(function(k){return remote[k]!==synced[k]});
+    if(!changed||busy||stimer||dirty())return;
+    adopt(remote);
+  }
+  setStat("Menyambung…");
+  slow=setTimeout(function(){if(!ready)setStat("Lokal saja")},10000);
+  if(window.claude&&claude.use){
+    Promise.all([claude.use("db"),claude.use("user")]).then(function(r){
+      var u=r[1];DB=r[0];
+      if(!DB||!u){DB=null;setStat("Lokal saja");return}
+      return Promise.resolve(u.id()).then(function(id){
+        if(!id){DB=null;setStat("Lokal saja");return}
+        UID=id;
+        DB.collection("data/users/"+UID).onSnapshot(onSnap,function(){setStat("Gagal sinkron")});
+      });
+    }).catch(function(){DB=null;setStat("Lokal saja")});
+  }else setStat("Lokal saja");
+
   var V=["beranda","kantong","bayar","riwayat","akun"];
   function show(t){
     if(V.indexOf(t)<0)t="beranda";
